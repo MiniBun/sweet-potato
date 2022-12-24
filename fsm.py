@@ -8,8 +8,8 @@ from oauth2client.service_account import ServiceAccountCredentials as SAC
 
 
 
-gc = pygsheets.authorize(service_file='/etc/secrets/sweet-potato-370214-3b8a193390de.json')
-# gc = pygsheets.authorize(service_file='sweet-potato-370214-3b8a193390de.json')
+# gc = pygsheets.authorize(service_file='/etc/secrets/sweet-potato-370214-3b8a193390de.json')
+gc = pygsheets.authorize(service_file='sweet-potato-370214-3b8a193390de.json')
             
 
 
@@ -85,24 +85,32 @@ class TocMachine(GraphMachine):
     
     def is_going_to_deliveryMethod(self,event,doc):
         text = event.message.text
-        return text == "@繼續訂購"
+        ref = doc.get().to_dict()
+        if ref['orderMode'] == 0 and text == "@繼續訂購":
+            doc.update({
+                'deliveryMethod' : 0, # 0 自取 1 宅配
+                'address' : '',
+                'box' : 0,
+                'heavy' : 0,
+                'light' : 0,
+                'share' : 0,
+                'name' : '',
+                'phone' : '',
+                'totalMoney' : 0,
+                'payMethod': 0, # 0 現金 1 轉帳
+                'deliveryFee' : 0,
+                'productMoney' : 0,
+                'orderMode' : 0,
+                'takeDate' : 0,
+            })
+            return True
+        elif ref['orderMode'] == 1 and text == "@修改付款方式":
+            return True
+        return False
+        
 
     def on_enter_deliveryMethod(self,event,doc):
         print("Go to deliveryMethod!")
-        doc.update({
-            'deliveryMethod' : 0, # 0 自取 1 宅配
-            'address' : '',
-            'box' : 0,
-            'heavy' : 0,
-            'light' : 0,
-            'share' : 0,
-            'name' : '',
-            'phone' : '',
-            'totalMoney' : 0,
-            'payMethod': 0, # 0 現金 1 轉帳
-            'deliveryFee' : 0,
-            'productMoney' : 0,
-        })
         reply_token = event.reply_token
         utils.deliveryMethod(reply_token)
     
@@ -143,14 +151,21 @@ class TocMachine(GraphMachine):
         reply_token = event.reply_token
         utils.checkAddress(reply_token,text)
 
-    def is_going_to_chooseItem(self,event,doc):
+    def is_going_to_chooseItem1(self,event,doc):
         text = event.message.text
-        if text == "@店面自取" or text == "@確認地址":
-            if text == "@店面自取":
-                doc.update({
-                    'deliveryMethod' : 0
-                })
+        if doc.get().to_dict()['orderMode']==0 and text == "@確認地址":
             return True
+        return False
+
+    def is_going_to_chooseItem2(self,event,doc):
+        text = event.message.text
+        if doc.get().to_dict()['orderMode'] == 0:
+            if text == "@星期六":
+                doc.update({'takeDate' : 0})
+                return True
+            elif text == "@星期日":
+                doc.update({'takeDate' : 1})
+                return True
         return False
 
     def on_enter_chooseItem(self,event,doc):
@@ -220,7 +235,12 @@ class TocMachine(GraphMachine):
                 buyList = '訂單明細：\n'
                 deliveryMethod = numberList.to_dict()['deliveryMethod']
                 if deliveryMethod == 0:
-                    buyList = buyList + '運送方式：店面自取\n----------\n'
+                    buyList = buyList + '運送方式：店面自取\n'
+                    takeDate = numberList.to_dict()['takeDate']
+                    if takeDate == 0:
+                        buyList = buyList + '取貨日：星期六\n----------\n'
+                    else:
+                        buyList = buyList + '取貨日：星期日\n----------\n'
                 else:
                     address = numberList.to_dict()['address']
                     buyList = buyList + '運送方式：黑貓宅配\n地址 ： '+ address + '\n----------\n'
@@ -261,6 +281,10 @@ class TocMachine(GraphMachine):
         text = event.message.text
         if orederDetailed.to_dict()['state'] == 'checkItem' and text == '@修改品項':
             return True
+        elif orederDetailed.to_dict()['orderMode'] == 1 and text == "@修改商品品項":
+            return True
+        elif orederDetailed.to_dict()['orderMode'] == 1 and text != "@修改商品品項":
+            return False
         try:
             status = float(text).is_integer()
             if status == False:
@@ -381,7 +405,12 @@ class TocMachine(GraphMachine):
 
     def is_going_to_inputName(self,event,doc):
         text = event.message.text
-        if text == '@繼續填寫訂購資訊' or text == '@修改名字':
+        ref = doc.get().to_dict()
+        if ref['orderMode'] == 0 and text == '@繼續填寫訂購資訊':
+            return True
+        elif ref['state'] == "checkName" and text == "@修改名字":
+            return True 
+        elif ref['orderMode'] == 1 and text == "@修改訂購人資訊":
             return True
         return False
     
@@ -427,25 +456,30 @@ class TocMachine(GraphMachine):
 
     def is_going_to_inputPayMethod(self,event,doc):
         text = event.message.text
-        if text == '@確認電話':
+        if doc.get().to_dict()['orderMode'] == 0 and text == '@確認電話':
+            return True
+        elif doc.get().to_dict()['orderMode'] == 1 and text == "@修改付款方式":
             return True
         return False
     
     def on_enter_inputPayMethod(self,event,doc):
         print("Go to inputPayMethod!")
         reply_token = event.reply_token
-        utils.choosePayMethod(reply_token)
+        deliveryMethod = doc.get().to_dict()['deliveryMethod']
+        utils.choosePayMethod(reply_token,deliveryMethod)
 
     def is_going_to_checkFinalOrder(self,event,doc):
         paymethod = event.message.text
         if paymethod == '@現金支付' :
             doc.update({
                 'payMethod' : 0,
+                'orderMode' : 1,
             })
             return True
         if paymethod == '@銀行轉帳' :
             doc.update({
                 'payMethod' : 1,
+                'orderMode' : 1,
             })
             return True
         return False
@@ -457,9 +491,14 @@ class TocMachine(GraphMachine):
         text += '訂購者姓名：' + detailedList.to_dict()['name'] + '\n'
         text += '訂購者電話：' + detailedList.to_dict()['phone'] + '\n'
         if detailedList.to_dict()['deliveryMethod'] == 0:
-            text += '付款方式：店鋪自取\n'
+            text += '取貨方式：店鋪自取\n'
+            takeDate = detailedList.to_dict()['takeDate']
+            if takeDate == 0:
+                text += '取貨日：星期六\n'
+            else:
+                text += '取貨日：星期日\n'
         else:
-            text += '付款方式：黑貓宅配\n'
+            text += '取貨方式：黑貓宅配\n'
             text += '宅配地址：'+ detailedList.to_dict()['address'] + '\n'
         if detailedList.to_dict()['payMethod'] == 0:
             text += '付款方式：現金支付\n'
@@ -517,3 +556,51 @@ class TocMachine(GraphMachine):
         reply_token = event.reply_token
         utils.finishOrder(reply_token,text)
 
+    def is_going_to_chooseDate(self,event,doc):
+        text = event.message.text
+        if text == '@店面自取':
+            doc.update({
+                'deliveryMethod' : 0
+            })
+            return True
+        return False
+
+    def on_enter_chooseDate(self,event,doc):
+        print("Go to chooseDate!")
+        reply_token = event.reply_token
+        utils.chooseDate(reply_token=reply_token)
+
+    def is_going_to_modifyOrder(self,event,doc):
+        text = event.message.text
+        if text == '@訂單修改':
+            return True
+        return False
+    
+    def on_enter_modifyOrder(self,event,doc):
+        print("Go to modifyOrder!")
+        reply_token = event.reply_token
+        utils.modifyOrder(reply_token)
+
+    def is_going_to_changeInfo(self,event,doc):
+        text = event.message.text
+        if text == '@修改訂購人資訊':
+            return True
+        return False
+    
+    def is_going_to_changeDeliveryMethod(self,event,doc):
+        text = event.message.text
+        if text == '@修改取貨方式':
+            return True
+        return False
+
+    def is_going_to_changePayMethod(self,event,doc):
+        text = event.message.text
+        if text == '@修改付款方式':
+            return True
+        return False
+
+    def is_going_to_changeItems(self,event,doc):
+        text = event.message.text
+        if text == '@修改商品品項':
+            return True
+        return False

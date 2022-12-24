@@ -26,7 +26,7 @@ load_dotenv()
 machine = TocMachine(
     states=["idle", "lobby", "introduction","placeOrder","searchOrder","deliveryMethod","chooseItem","deliveryAddress","checkAddress",
         "boxPotato","sharePotato","heavyPotato","lightPotato","addOther","checkItem","aboutUs","contactUs","copyPhone","copyAddress","inputName",
-        "checkName","inputPhone","checkPhone","inputPayMethod","checkFinalOrder","finishOrder"],
+        "checkName","inputPhone","checkPhone","inputPayMethod","checkFinalOrder","finishOrder","chooseDate","modifyOrder"],
     transitions=[
         {
             "trigger": "advance","source": "idle","dest": "lobby","conditions": "is_going_to_lobby",
@@ -47,16 +47,25 @@ machine = TocMachine(
             "trigger": "advance","source": "deliveryMethod","dest": "deliveryAddress","conditions": "is_going_to_deliveryAddress",
         },
         {
-            "trigger": "advance","source": "deliveryMethod","dest": "chooseItem","conditions": "is_going_to_chooseItem",
+            "trigger": "advance","source": "deliveryMethod","dest": "chooseDate","conditions": "is_going_to_chooseDate",
+        },
+        {
+            "trigger": "advance","source": "chooseDate","dest": "chooseItem","conditions": "is_going_to_chooseItem2",
+        },
+        {
+            "trigger": "advance","source": "chooseDate","dest": "checkFinalOrder","conditions": "is_going_to_checkFinalOrder",
         },
         {
             "trigger": "advance","source": "deliveryAddress","dest": "checkAddress","conditions": "is_going_to_checkAddress",
         },
         {
-            "trigger": "advance","source": "checkAddress","dest": "chooseItem","conditions": "is_going_to_chooseItem",
+            "trigger": "advance","source": "checkAddress","dest": "chooseItem","conditions": "is_going_to_chooseItem1",
         },
         {
             "trigger": "advance","source": "checkAddress","dest": "deliveryAddress","conditions": "is_going_to_deliveryAddress",
+        },
+        {
+            "trigger": "advance","source": "checkAddress","dest": "checkFinalOrder","conditions": "is_going_to_checkFinalOrder",
         },
         {
             "trigger": "advance","source": "chooseItem","dest": "boxPotato","conditions": "is_going_to_boxPotato",
@@ -128,6 +137,9 @@ machine = TocMachine(
             "trigger": "advance","source": "checkItem","dest": "inputName","conditions": "is_going_to_inputName",
         },
         {
+            "trigger": "advance","source": "checkItem","dest": "checkFinalOrder","conditions": "is_going_to_checkFinalOrder",
+        },
+        {
             "trigger": "advance","source": "inputName","dest": "checkName","conditions": "is_going_to_checkName",
         },
         {
@@ -146,10 +158,28 @@ machine = TocMachine(
             "trigger": "advance","source": "checkPhone","dest": "inputPhone","conditions": "is_going_to_inputPhone",
         },
         {
+            "trigger": "advance","source": "checkPhone","dest": "checkFinalOrder","conditions": "is_going_to_checkFinalOrder",
+        },
+        {
             "trigger": "advance","source": "inputPayMethod","dest": "checkFinalOrder","conditions": "is_going_to_checkFinalOrder",
         },
         {
             "trigger": "advance","source": "checkFinalOrder","dest": "finishOrder","conditions": "is_going_to_finishOrder",
+        },
+        {
+            "trigger": "advance","source": "checkFinalOrder","dest": "modifyOrder","conditions": "is_going_to_modifyOrder",
+        },
+        {
+            "trigger": "advance","source": "modifyOrder","dest": "inputName","conditions": "is_going_to_changeInfo",
+        },
+        {
+            "trigger": "advance","source": "modifyOrder","dest": "inputPayMethod","conditions": "is_going_to_changePayMethod",
+        },
+        {
+            "trigger": "advance","source": "modifyOrder","dest": "deliveryMethod","conditions": "is_going_to_changeDeliveryMethod",
+        },
+        {
+            "trigger": "advance","source": "modifyOrder","dest": "addOther","conditions": "is_going_to_changeItems",
         },
         {
             "trigger": "advance","source": "finishOrder","dest": "lobby","conditions": "is_going_to_lobby",
@@ -158,7 +188,7 @@ machine = TocMachine(
             "trigger": "advance",
             "source": ["placeOrder","deliveryMethod","deliveryAddress","checkAddress","chooseItem","boxPotato",
                 "sharePotato","heavyPotato","lightPotato","checkItem","addOther","inputName","checkName","inputPhone",
-                "checkPhone","checkFinalOrder"],
+                "checkPhone","checkFinalOrder","chooseDate","modifyOrder"],
             "dest": "lobby",
             "conditions": "is_going_to_cancelOrder",
         },
@@ -257,12 +287,12 @@ def webhook_handler():
         #     'state' : 'idle',
         # })
         doc = dbState.get()
-
         if doc.exists:
             global preState
             machine.state = doc.to_dict()['state']
             preState = machine.state
         else:
+            preState = "idle"
             machine.state = 'idle'
             dbState.set({
                 'state' : 'idle',
@@ -278,6 +308,8 @@ def webhook_handler():
                 'payMethod': 0, # 0 現金 1 轉帳
                 'deliveryFee' : 0,
                 'productMoney' : 0,
+                'takeDate' : 0, # 0 星期六 1 星期日 
+                'orderMode' : 0 # 0 ordering 1 final order
             })
         print(f"\nFSM STATE: {machine.state}")
         print(f"REQUEST BODY: \n{body}")

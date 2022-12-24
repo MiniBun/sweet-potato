@@ -111,7 +111,7 @@ def orderTip(reply_token):
     line_bot_api = LineBotApi(channel_access_token)
     line_bot_api.reply_message(reply_token, [
         TextSendMessage(
-            text="親愛的顧客您好！\n歡迎使用Line訂購系統\n取貨方式可選則店面自取或宅配\n自取可選擇現金付款或轉帳\n宅配僅限轉帳\n過程中若想取消訂購\n可隨時輸入「@取消訂購」\n\n可訂購品項：\n盒裝地瓜 100元 （限自取）\n真空分享包 100元\n真空重量包 50元\n真空輕量包 35元\n\n訂購方式：\n先輸入子要的品名後\n待系統詢問數量後\n再輸入數量即可\n（可參考附圖範例）\n\n如有其他客製需求\n歡迎直接來電預訂"
+            text="親愛的顧客您好！\n歡迎使用Line訂購系統\n取貨方式可選則店面自取或宅配\n自取可選擇現金付款或轉帳\n宅配僅限轉帳\n過程中若想取消訂購\n可隨時輸入「@取消訂購」\n\n可訂購品項：\n盒裝地瓜 100元 （限自取）\n真空分享包 100元\n真空重量包 50元\n真空輕量包 35元\n\n訂購方式：\n先選擇您要的品名後\n待系統詢問數量時n再輸入數量即可\n（可參考附圖範例）\n到貨日期：\n如選擇店面自取\n請選擇當週的禮拜六或日\n宅配的到貨日皆為隔週二\n\n如有其他客製需求\n歡迎直接來電預訂"
         ),
         TemplateSendMessage(
             alt_text='訂購系統',
@@ -149,6 +149,29 @@ def deliveryMethod(reply_token):
                     MessageTemplateAction(
                         label = '黑貓宅配',
                         text='@黑貓宅配'
+                    ),
+                ]
+            )
+        ),
+    ]
+)
+
+def chooseDate(reply_token):
+    line_bot_api = LineBotApi(channel_access_token)
+    line_bot_api.reply_message(reply_token, [
+        TemplateSendMessage(
+            alt_text='店面取貨日',
+            template=ButtonsTemplate(
+                title='店面取貨日',
+                text="請選擇店面取貨日",
+                actions=[
+                    MessageTemplateAction(
+                        label = '星期六',
+                        text='@星期六'
+                    ),
+                    MessageTemplateAction(
+                        label = '星期日',
+                        text='@星期日'
                     ),
                 ]
             )
@@ -506,23 +529,26 @@ def checkFinalOrder(reply_token,text):
     ]
     line_bot_api.reply_message(reply_token,messages)
 
-def choosePayMethod(reply_token):
+def choosePayMethod(reply_token,deliveryMethod):
     line_bot_api = LineBotApi(channel_access_token)
+    actions = []
+    text = "請選擇付款方式\n宅配僅接受銀行轉帳\n造成您的不便\n敬請見諒"
+    if deliveryMethod==0 :
+        actions.append(MessageTemplateAction(
+                        label = '現金支付',
+                        text='@現金支付'
+                    ))
+        text = "請選擇付款方式\n"
+    actions.append(MessageTemplateAction(
+                        label = '銀行轉帳',
+                        text='@銀行轉帳'
+                    ))
     line_bot_api.reply_message(reply_token,TemplateSendMessage(
             alt_text='付款方式',
             template=ButtonsTemplate(
                 title='付款方式',
-                text="請選擇付款方式",
-                actions=[
-                    MessageTemplateAction(
-                        label = '現金支付',
-                        text='@現金支付'
-                    ),
-                    MessageTemplateAction(
-                        label = '銀行轉帳',
-                        text='@銀行轉帳'
-                    ),
-                ]
+                text=text,
+                actions=actions,
             )
         ))
 
@@ -545,6 +571,35 @@ def finishOrder(reply_token,text):
         ),
     ]
     line_bot_api.reply_message(reply_token,messages)
+
+def modifyOrder(reply_token):
+    line_bot_api = LineBotApi(channel_access_token)
+    text = "請選擇欲修改的項目"
+    line_bot_api.reply_message(reply_token,TemplateSendMessage(
+            alt_text='訂單修改',
+            template=ButtonsTemplate(
+                title='訂單修改',
+                text=text,
+                actions=[
+                    MessageTemplateAction(
+                        label = '修改訂購人資訊',
+                        text='@修改訂購人資訊'
+                    ),
+                    MessageTemplateAction(
+                        label = '修改取貨方式',
+                        text='@修改取貨方式'
+                    ),
+                    MessageTemplateAction(
+                        label = '修改付款方式',
+                        text='@修改付款方式'
+                    ),
+                    MessageTemplateAction(
+                        label = '修改商品品項',
+                        text='@修改商品品項'
+                    ),
+                ],
+            )
+        ))
 
 """
 def send_image_url(id, img_url):
