@@ -13,7 +13,8 @@ from utils import send_text_message
 import firebase_admin
 from firebase_admin import credentials,firestore
 
-cred = credentials.Certificate("/etc/secrets/serviceAccount.json")
+# cred = credentials.Certificate("/etc/secrets/serviceAccount.json")
+cred = credentials.Certificate("serviceAccount.json")
 firebase_admin.initialize_app(cred)
 
 db = firestore.client()
@@ -23,7 +24,7 @@ load_dotenv()
 
 
 machine = TocMachine(
-    states=["idle", "lobby", "introduction","placeOrder","searchOrder","cancelOrder","deliveryMethod","chooseItem","deliveryAddress","checkAddress",
+    states=["idle", "lobby", "introduction","placeOrder","searchOrder","deliveryMethod","chooseItem","deliveryAddress","checkAddress",
         "boxPotato","sharePotato","heavyPotato","lightPotato","addOther","checkItem","aboutUs","contactUs","copyPhone","copyAddress","inputName",
         "checkName","inputPhone","checkPhone","inputPayMethod","checkFinalOrder","finishOrder"],
     transitions=[
@@ -158,15 +159,15 @@ machine = TocMachine(
             "source": ["placeOrder","deliveryMethod","deliveryAddress","checkAddress","chooseItem","boxPotato",
                 "sharePotato","heavyPotato","lightPotato","checkItem","addOther","inputName","checkName","inputPhone",
                 "checkPhone","checkFinalOrder"],
-            "dest": "cancelOrder",
+            "dest": "lobby",
             "conditions": "is_going_to_cancelOrder",
         },
-        {
-            "trigger": "go_back", 
-            "source": ["cancelOrder"], 
-            "dest": "lobby",
-            # "conditions": "is_going_to_user",
-        },
+        # {
+        #     "trigger": "go_back", 
+        #     "source": ["cancelOrder"], 
+        #     "dest": "lobby",
+        #     # "conditions": "is_going_to_user",
+        # },
         {
             "trigger": "advance", 
             "source": "lobby", 
