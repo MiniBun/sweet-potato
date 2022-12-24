@@ -19,6 +19,7 @@ click = "*"
 future = "*"
 line-bot-sdk = "*"
 transitions = "*"
+oauth2client = "*"
 
 [dev-packages]
 
