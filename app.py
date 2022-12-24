@@ -53,7 +53,7 @@ machine = TocMachine(
             "trigger": "advance","source": "chooseDate","dest": "chooseItem","conditions": "is_going_to_chooseItem2",
         },
         {
-            "trigger": "advance","source": "chooseDate","dest": "checkFinalOrder","conditions": "is_going_to_checkFinalOrder",
+            "trigger": "advance","source": "chooseDate","dest": "checkFinalOrder","conditions": "is_going_to_returnCheck",
         },
         {
             "trigger": "advance","source": "deliveryAddress","dest": "checkAddress","conditions": "is_going_to_checkAddress",
@@ -65,7 +65,7 @@ machine = TocMachine(
             "trigger": "advance","source": "checkAddress","dest": "deliveryAddress","conditions": "is_going_to_deliveryAddress",
         },
         {
-            "trigger": "advance","source": "checkAddress","dest": "checkFinalOrder","conditions": "is_going_to_checkFinalOrder",
+            "trigger": "advance","source": "checkAddress","dest": "checkFinalOrder","conditions": "is_going_to_returnCheck",
         },
         {
             "trigger": "advance","source": "chooseItem","dest": "boxPotato","conditions": "is_going_to_boxPotato",
@@ -137,7 +137,7 @@ machine = TocMachine(
             "trigger": "advance","source": "checkItem","dest": "inputName","conditions": "is_going_to_inputName",
         },
         {
-            "trigger": "advance","source": "checkItem","dest": "checkFinalOrder","conditions": "is_going_to_checkFinalOrder",
+            "trigger": "advance","source": "checkItem","dest": "checkFinalOrder","conditions": "is_going_to_returnCheck",
         },
         {
             "trigger": "advance","source": "inputName","dest": "checkName","conditions": "is_going_to_checkName",
@@ -158,7 +158,7 @@ machine = TocMachine(
             "trigger": "advance","source": "checkPhone","dest": "inputPhone","conditions": "is_going_to_inputPhone",
         },
         {
-            "trigger": "advance","source": "checkPhone","dest": "checkFinalOrder","conditions": "is_going_to_checkFinalOrder",
+            "trigger": "advance","source": "checkPhone","dest": "checkFinalOrder","conditions": "is_going_to_returnCheck",
         },
         {
             "trigger": "advance","source": "inputPayMethod","dest": "checkFinalOrder","conditions": "is_going_to_checkFinalOrder",

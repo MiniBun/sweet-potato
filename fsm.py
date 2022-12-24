@@ -129,7 +129,8 @@ class TocMachine(GraphMachine):
         if text == "@黑貓宅配" or text == "@修改地址":
             if text == "@黑貓宅配":
                 doc.update({
-                    'deliveryMethod' : 1
+                    'deliveryMethod' : 1,
+                    'box' : 0
                 })
             return True
         return False 
@@ -258,7 +259,7 @@ class TocMachine(GraphMachine):
                     money += 35*lightNum
                 buyList = buyList+'----------\n'+'總計 ' + str(money) + ' 元'
                 reply_token = event.reply_token
-                utils.checkItem(reply_token,buyList)
+                utils.checkItem(reply_token,buyList,numberList.to_dict()["orderMode"])
             return True
         return False
 
@@ -283,8 +284,6 @@ class TocMachine(GraphMachine):
             return True
         elif orederDetailed.to_dict()['orderMode'] == 1 and text == "@修改商品品項":
             return True
-        elif orederDetailed.to_dict()['orderMode'] == 1 and text != "@修改商品品項":
-            return False
         try:
             status = float(text).is_integer()
             if status == False:
@@ -382,14 +381,14 @@ class TocMachine(GraphMachine):
 
     def is_going_to_copyAddress(self,event,doc):
         text = event.message.text
-        if text == "@複製地址":
+        if text == "@位置資訊":
             return True
         return False
 
     def on_enter_copyAddress(self,event,doc):
         print("Go to copyAddress!")
         reply_token = event.reply_token
-        utils.send_text_message(reply_token,'台南市永康區大灣路129號之3')
+        utils.sendLocation(reply_token)
         self.go_back(event,doc)
 
     def is_going_to_aboutUs(self,event,doc):
@@ -483,6 +482,37 @@ class TocMachine(GraphMachine):
             })
             return True
         return False
+
+    def is_going_to_returnCheck(self,event,doc):
+        ref = doc.get().to_dict()
+        text = event.message.text
+        if ref["orderMode"] == 1 and ref["state"] == "chooseDate":
+            if text == "@星期六":
+                doc.update({'takeDate' : 0})
+                return True
+            elif text == "@星期日":
+                doc.update({'takeDate' : 1})
+                return True
+            else:
+                return False
+        elif ref["orderMode"] == 1 and ref["state"] == "checkPhone":
+            if text == "@確認電話":
+                return True
+            else:
+                return False
+        elif ref["orderMode"] == 1 and ref["state"] == "checkAddress":
+            if text == "@確認地址":
+                return True
+            else:
+                return False
+        elif ref["orderMode"] == 1 and ref["state"] == "checkItem":
+            if text == "@回結帳頁":
+                return True
+            else:
+                return False
+        return False
+        
+
 
     def on_enter_checkFinalOrder(self,event,doc):
         print("Go to checkFinalOrder!")

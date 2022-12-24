@@ -1,7 +1,7 @@
 import os
 
 from linebot import LineBotApi, WebhookParser
-from linebot.models import MessageEvent, TextMessage, TextSendMessage, TemplateSendMessage, ButtonsTemplate, MessageTemplateAction, CarouselColumn, CarouselContainer, CarouselTemplate, ImageCarouselColumn, ConfirmTemplate, MessageAction
+from linebot.models import MessageEvent, TextMessage, TextSendMessage, TemplateSendMessage, ButtonsTemplate, MessageTemplateAction, CarouselColumn, CarouselContainer, CarouselTemplate, ImageCarouselColumn, ConfirmTemplate, MessageAction, LocationMessage
 
 
 # channel_access_token = os.getenv("LINE_CHANNEL_ACCESS_TOKEN", None)
@@ -391,8 +391,8 @@ def contactUs(reply_token):
                     text = "歡迎前往「台南市永康區大灣路129號之3」",
                     actions=[
                         MessageTemplateAction(
-                            label="複製地址",
-                            text='@複製地址',
+                            label="位置資訊",
+                            text='@位置資訊',
                         ),
 
                     ]
@@ -427,29 +427,36 @@ def inputNumber(reply_token,item):
     line_bot_api = LineBotApi(channel_access_token)
     line_bot_api.reply_message(reply_token, TextSendMessage("請輸入您欲訂購的"+"「"+item+"」數量\n（如欲訂購五包，請直接輸入「5」（不用量詞））"))
     
-def checkItem(reply_token,text):
+def checkItem(reply_token,text,mode):
     line_bot_api = LineBotApi(channel_access_token)
+    actions = []
+    actions.append(MessageTemplateAction(
+                        label = '修改品項',
+                        text='@修改品項'
+                    ))
+    # texts = "如商品正確無誤 請點擊「繼續填寫訂購資訊」"
+    if mode == 0:
+        actions.append(MessageTemplateAction(
+                        label = '繼續填寫訂購資訊',
+                        text='@繼續填寫訂購資訊'
+                    ))
+    else:
+        actions.append(MessageTemplateAction(
+                        label = '回結帳頁',
+                        text='@回結帳頁'
+                    ))
+    actions.append(MessageTemplateAction(
+                        label = '取消訂購',
+                        text='@取消釘購'
+                    ))
     messages = [
-        TextSendMessage(text=text),
+        TextSendMessage(text),
         TemplateSendMessage(
             alt_text='確認品項',
             template=ButtonsTemplate(
                 title='確認品項',
-                text = '如商品正確無誤 請點擊「繼續填寫訂購資訊',
-                actions=[
-                    MessageTemplateAction(
-                        label = '修改品項',
-                        text='@修改品項'
-                    ),
-                    MessageTemplateAction(
-                        label = '繼續填寫訂購資訊',
-                        text='@繼續填寫訂購資訊'
-                    ),
-                    MessageTemplateAction(
-                        label = '取消訂購',
-                        text='@取消釘購'
-                    ),
-                ]
+                text = "如商品正確無誤 請點選「繼續填寫訂購資訊」或「回結帳頁」",
+                actions=actions,
             )
         ),
     ]
@@ -601,6 +608,15 @@ def modifyOrder(reply_token):
             )
         ))
 
+def sendLocation(reply_token):
+    line_bot_api = LineBotApi(channel_access_token)
+    text = "請選擇欲修改的項目"
+    line_bot_api.reply_message(reply_token,LocationMessage(
+        title= "癸屋的甕烤地瓜",
+        address="台南市永康區大灣路129號之3",
+        latitude=23.009565,
+        longitude=120.269361,
+    ))
 """
 def send_image_url(id, img_url):
     pass
