@@ -14,7 +14,7 @@ from firebase_admin import credentials,firestore
 
 
 
-gc = pygsheets.authorize(service_file='sweet-potato-370214-3b8a193390de.json')
+gc = pygsheets.authorize(service_file='/etc/secrets/sweet-potato-370214-3b8a193390de.json')
             
 
 
