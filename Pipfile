@@ -12,6 +12,7 @@ firebase-admin = "*"
 google-cloud-firestore = "*"
 pip = "*"
 graphviz = "*"
+flask = "*"
 
 [dev-packages]
 
