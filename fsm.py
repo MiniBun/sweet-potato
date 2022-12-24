@@ -273,28 +273,28 @@ class TocMachine(GraphMachine):
             else:
                 number = int(text)
                 state = orederDetailed.to_dict()['state']
-                match state:
-                    case 'boxPotato':
-                        orderedNum = orederDetailed.to_dict()['box']
-                        if orderedNum + number >= 0 :
-                            doc.update({
-                                'box' : orderedNum + number
-                            })
-                        else:
-                            reply_token = event.reply_token
-                            utils.send_text_message(reply_token,'無足夠數量\n請重新輸入')
-                            return False
-                    case 'heavyPotato':
-                        orderedNum = orederDetailed.to_dict()['heavy']
-                        if orderedNum + number >= 0 :
-                            doc.update({
-                                'heavy' : orderedNum + number
-                            })
-                        else:
-                            reply_token = event.reply_token
-                            utils.send_text_message(reply_token,'無足夠數量\n請重新輸入')
-                            return False
-                    case 'lightPotato':
+                
+                if state == 'boxPotato':
+                    orderedNum = orederDetailed.to_dict()['box']
+                    if orderedNum + number >= 0 :
+                        doc.update({
+                            'box' : orderedNum + number
+                        })
+                    else:
+                        reply_token = event.reply_token
+                        utils.send_text_message(reply_token,'無足夠數量\n請重新輸入')
+                        return False
+                elif state == 'heavyPotato':
+                    orderedNum = orederDetailed.to_dict()['heavy']
+                    if orderedNum + number >= 0 :
+                        doc.update({
+                            'heavy' : orderedNum + number
+                        })
+                    else:
+                        reply_token = event.reply_token
+                        utils.send_text_message(reply_token,'無足夠數量\n請重新輸入')
+                        return False
+                elif state == 'lightPotato':
                         orderedNum = orederDetailed.to_dict()['light']
                         if orderedNum + number >= 0 :
                             doc.update({
@@ -304,16 +304,17 @@ class TocMachine(GraphMachine):
                             reply_token = event.reply_token
                             utils.send_text_message(reply_token,'無足夠數量\n請重新輸入')
                             return False
-                    case 'sharePotato':
-                        orderedNum = orederDetailed.to_dict()['share']
-                        if orderedNum + number >= 0 :
-                            doc.update({
-                                'share' : orderedNum + number
-                            })
-                        else:
-                            reply_token = event.reply_token
-                            utils.send_text_message(reply_token,'無足夠數量\n請重新輸入')
-                            return False
+                elif state == 'sharePotato':
+                    orderedNum = orederDetailed.to_dict()['share']
+                    if orderedNum + number >= 0 :
+                        doc.update({
+                            'share' : orderedNum + number
+                        })
+                    else:
+                        reply_token = event.reply_token
+                        utils.send_text_message(reply_token,'無足夠數量\n請重新輸入')
+                        return False
+                        
                 return True
         except:
             return False
