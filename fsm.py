@@ -2,15 +2,9 @@ from transitions.extensions import GraphMachine
 
 # from utils import send_text_message, showMenu
 
-import re
-import sys
-import datetime
-import gspread
 import pygsheets
 import utils
 from oauth2client.service_account import ServiceAccountCredentials as SAC
-import firebase_admin
-from firebase_admin import credentials,firestore
 
 
 
@@ -314,7 +308,7 @@ class TocMachine(GraphMachine):
                         reply_token = event.reply_token
                         utils.send_text_message(reply_token,'無足夠數量\n請重新輸入')
                         return False
-                        
+
                 return True
         except:
             return False
