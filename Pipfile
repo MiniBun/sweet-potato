@@ -13,6 +13,7 @@ google-cloud-firestore = "*"
 pip = "*"
 graphviz = "*"
 flask = "*"
+python-dotenv = "*"
 
 [dev-packages]
 
