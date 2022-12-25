@@ -761,10 +761,7 @@ class TocMachine(GraphMachine):
             return False
         else:
             ref = orderList.to_dict()
-            if ref['orderPID'] != uid and ref['orderPID'] != os.getenv('ADMIN_UID',None):
-                utils.send_text_message(reply_token,'您非該訂單擁有者\n請重新輸入或輸入「主選單」回主選單')
-                return False
-            else:
+            if ref['orderPID'] == uid or ref['orderPID'] == os.getenv('ADMIN_UID',None):
                 text = '訂單明細：\n'
                 text += '訂單編號：' + oid + '\n'
                 text += '訂單狀態：' + ref['stateOfOrder'] + '\n'
@@ -804,6 +801,9 @@ class TocMachine(GraphMachine):
                 text += '訂單總額 共'+str(ref["totalMoney"])+'元\n'
                 utils.showOrder(reply_token,text)
                 return True
+            else:
+                utils.send_text_message(reply_token,'您非該訂單擁有者\n請重新輸入或輸入「主選單」回主選單')
+                return False
 
     def is_going_to_valid(self,event,doc):
         text = event.message.text
