@@ -761,7 +761,7 @@ class TocMachine(GraphMachine):
             return False
         else:
             ref = orderList.to_dict()
-            if ref['orderPID'] != uid or ref['orderPID'] != os.getenv('ADMIN_UID',None):
+            if ref['orderPID'] != uid and ref['orderPID'] != os.getenv('ADMIN_UID',None):
                 utils.send_text_message(reply_token,'您非該訂單擁有者\n請重新輸入或輸入「主選單」回主選單')
                 return False
             else:
