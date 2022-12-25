@@ -13,8 +13,8 @@ from utils import send_text_message
 import firebase_admin
 from firebase_admin import credentials,firestore
 
-# cred = credentials.Certificate("/etc/secrets/serviceAccount.json")
-cred = credentials.Certificate("serviceAccount.json")
+cred = credentials.Certificate("/etc/secrets/serviceAccount.json")
+# cred = credentials.Certificate("serviceAccount.json")
 firebase_admin.initialize_app(cred)
 
 db = firestore.client()
@@ -26,7 +26,8 @@ load_dotenv()
 machine = TocMachine(
     states=["idle", "lobby", "introduction","placeOrder","searchOrder","deliveryMethod","chooseItem","deliveryAddress","checkAddress",
         "boxPotato","sharePotato","heavyPotato","lightPotato","addOther","checkItem","aboutUs","contactUs","copyPhone","copyAddress","inputName",
-        "checkName","inputPhone","checkPhone","inputPayMethod","checkFinalOrder","finishOrder","chooseDate","modifyOrder"],
+        "checkName","inputPhone","checkPhone","inputPayMethod","checkFinalOrder","finishOrder","chooseDate","modifyOrder","showOrder","valid"
+        ,"changeState"],
     transitions=[
         {
             "trigger": "advance","source": "idle","dest": "lobby","conditions": "is_going_to_lobby",
@@ -39,6 +40,15 @@ machine = TocMachine(
         },
         {
             "trigger": "advance","source": "lobby","dest": "searchOrder","conditions": "is_going_to_searchOrder",
+        },
+        {
+            "trigger": "advance","source": "lobby","dest": "valid","conditions": "is_going_to_valid",
+        },
+        {
+            "trigger": "advance","source": "valid","dest": "changeState","conditions": "is_going_to_changeState",
+        },
+        {
+            "trigger": "advance","source": "changeState","dest": "changeState","conditions": "is_going_to_changeState",
         },
         {
             "trigger": "advance","source": "placeOrder","dest": "deliveryMethod","conditions": "is_going_to_deliveryMethod",
@@ -185,6 +195,18 @@ machine = TocMachine(
             "trigger": "advance","source": "finishOrder","dest": "lobby","conditions": "is_going_to_lobby",
         },
         {
+            "trigger": "advance","source": "aboutUs","dest": "lobby","conditions": "is_going_to_lobby",
+        },
+        {
+            "trigger": "advance","source": "searchOrder","dest": "showOrder","conditions": "is_going_to_showOrder",
+        },
+        {
+            "trigger": "advance","source": "showOrder","dest": "lobby","conditions": "is_going_to_lobby",
+        },
+        {
+            "trigger": "advance","source": "showOrder","dest": "searchOrder","conditions": "is_going_to_searchOrder",
+        },
+        {
             "trigger": "advance",
             "source": ["placeOrder","deliveryMethod","deliveryAddress","checkAddress","chooseItem","boxPotato",
                 "sharePotato","heavyPotato","lightPotato","checkItem","addOther","inputName","checkName","inputPhone",
@@ -199,15 +221,17 @@ machine = TocMachine(
         #     # "conditions": "is_going_to_user",
         # },
         {
-            "trigger": "advance", 
-            "source": "lobby", 
-            "dest": "idle",
-            "conditions": "is_going_to_idle",
+            "trigger": "advance", "source": "lobby", "dest": "idle","conditions": "is_going_to_idle",
         },
         {
             "trigger": "go_back",
             "source": ["copyPhone","copyAddress"], 
             "dest": "contactUs",
+        },
+        {
+            "trigger": "go_back",
+            "source": ["valid","changeState"],
+            "dest": "lobby",
         },
     ],
     initial="idle",

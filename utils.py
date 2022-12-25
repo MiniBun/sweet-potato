@@ -1,7 +1,7 @@
 import os
 
 from linebot import LineBotApi, WebhookParser
-from linebot.models import MessageEvent, TextMessage, TextSendMessage, TemplateSendMessage, ButtonsTemplate, MessageTemplateAction, CarouselColumn, CarouselContainer, CarouselTemplate, ImageCarouselColumn, ConfirmTemplate, MessageAction, LocationMessage
+from linebot.models import MessageEvent, TextMessage, TextSendMessage, TemplateSendMessage, ButtonsTemplate, MessageTemplateAction, CarouselColumn, CarouselContainer, CarouselTemplate, ImageCarouselColumn, ConfirmTemplate, MessageAction, LocationMessage, ImageSendMessage
 
 
 # channel_access_token = os.getenv("LINE_CHANNEL_ACCESS_TOKEN", None)
@@ -559,7 +559,7 @@ def choosePayMethod(reply_token,deliveryMethod):
             )
         ))
 
-def finishOrder(reply_token,text):
+def finishOrder(reply_token,text,orderNum,push):
     line_bot_api = LineBotApi(channel_access_token)
     messages = [
         TextMessage(text=text),
@@ -567,7 +567,7 @@ def finishOrder(reply_token,text):
             alt_text='完成訂購',
             template=ButtonsTemplate(
                 title='完成訂購',
-                text="感謝您的訂購！\n訂單已成功建立！\n歡迎至查詢訂單查詢詳細資訊\n如有其他疑問\n請播打0988888888",
+                text="感謝您的訂購！\n訂單已成功建立！\n訂單編號為："+str(orderNum)+"\n",
                 actions=[
                     MessageTemplateAction(
                         label = '回主選單',
@@ -578,6 +578,8 @@ def finishOrder(reply_token,text):
         ),
     ]
     line_bot_api.reply_message(reply_token,messages)
+    admin_uid = os.getenv("ADMIN_UID", None)
+    line_bot_api.push_message(admin_uid,TextSendMessage(text=push))
 
 def modifyOrder(reply_token):
     line_bot_api = LineBotApi(channel_access_token)
@@ -617,6 +619,39 @@ def sendLocation(reply_token):
         latitude=23.009565,
         longitude=120.269361,
     ))
+
+def sendAboutUs(reply_token):
+    line_bot_api = LineBotApi(channel_access_token)
+    messages = [
+        TextSendMessage('我們是位在大灣國聖宮旁的一間甕烤地瓜\n地瓜盛產時就會發現我們的蹤影\n但每日限量出爐\n因此想吃的朋友要儘早預定或來現場碰碰運氣\n我們也即將於2023年1月開始新一輪的販售囉！\n營業時間也更動為六日的10:00到賣完為止\n歡迎各位蒞臨～\n以下是我們的DM'),
+        ImageSendMessage(original_content_url="https://i.imgur.com/k7ud90X.jpg",preview_image_url="https://i.imgur.com/k7ud90X.jpg"),
+        TextSendMessage('您可輸入「主選單」返回主選單'),
+    ]
+    line_bot_api.reply_message(reply_token,messages)
+
+def showOrder(reply_token,text):
+    line_bot_api = LineBotApi(channel_access_token)
+    messages = [
+        TextSendMessage(text=text),
+        TemplateSendMessage(
+            alt_text='查詢訂單',
+            template=ButtonsTemplate(
+                title='查詢訂單',
+                text="如需修改訂單或有其他疑慮\n請播打客服專線：0988-888-888",
+                actions=[
+                    MessageTemplateAction(
+                        label = '查詢下一筆資料',
+                        text='@查詢下一筆資料'
+                    ),
+                    MessageTemplateAction(
+                        label = '回主選單',
+                        text='@回主選單'
+                    ),
+                ],
+            )
+        )
+    ]
+    line_bot_api.reply_message(reply_token,messages)
 """
 def send_image_url(id, img_url):
     pass
