@@ -230,7 +230,7 @@ machine = TocMachine(
         },
         {
             "trigger": "go_back",
-            "source": ["valid","changeState","showOrder"],
+            "source": ["valid","changeState","searchOrder"],
             "dest": "lobby",
         },
     ],
