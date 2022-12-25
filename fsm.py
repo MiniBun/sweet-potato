@@ -761,7 +761,7 @@ class TocMachine(GraphMachine):
             return False
         else:
             ref = orderList.to_dict()
-            if ref['orderPID'] == uid or ref['orderPID'] == os.getenv('ADMIN_UID',None):
+            if ref['orderPID'] == uid or uid == os.getenv('ADMIN_UID',None):
                 text = '訂單明細：\n'
                 text += '訂單編號：' + oid + '\n'
                 text += '訂單狀態：' + ref['stateOfOrder'] + '\n'
