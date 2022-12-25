@@ -13,7 +13,7 @@
 
 ### 加入好友
 輸入LINE ID：@846duagm
-或掃描以下QRCode
+或掃描QRCode
 ![](https://i.imgur.com/pZ8uiWw.png)
 
 ### 主選單
