@@ -688,7 +688,10 @@ class TocMachine(GraphMachine):
         text += '---------------\n'
         totalMoney = productMoney+deliveryFee
         text += '訂單總額 共'+str(totalMoney)+'元\n'
-        dataSet.update({'totalMoney' : totalMoney})
+        dataSet.update({
+            'totalMoney' : totalMoney,
+            'productMoney' : productMoney,
+        })
         db.collection('order').document(str(orderNum)).set(dataSet)
         
         utils.finishOrder(reply_token,text1,orderNum,text)
