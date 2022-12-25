@@ -53,7 +53,6 @@ def showMenu(reply_token):
         template=CarouselTemplate(
             columns=[
                 CarouselColumn(
-                    thumbnail_image_url="https://i.imgur.com/rRW8W4Y.jpg",
                     title="關於癸屋",
                     text = "獲取癸屋的相關資訊",
                     actions=[
@@ -68,7 +67,6 @@ def showMenu(reply_token):
                     ]
                 ),
                 CarouselColumn(
-                    thumbnail_image_url="https://i.imgur.com/rRW8W4Y.jpg",
                     title="訂單資訊",
                     text = "您可以在此下訂或查詢訂單",
                     actions=[
@@ -84,7 +82,6 @@ def showMenu(reply_token):
                     ]
                 ),
                 CarouselColumn(
-                    thumbnail_image_url="https://i.imgur.com/rRW8W4Y.jpg",
                     title="其他",
                     text = "請選擇您需要的服務",
                     actions=[
@@ -113,6 +110,7 @@ def orderTip(reply_token):
         TextSendMessage(
             text="親愛的顧客您好！\n歡迎使用Line訂購系統\n取貨方式可選則店面自取或宅配\n自取可選擇現金付款或轉帳\n宅配僅限轉帳\n過程中若想取消訂購\n可隨時輸入「@取消訂購」\n\n可訂購品項：\n盒裝地瓜 100元 （限自取）\n真空分享包 100元\n真空重量包 50元\n真空輕量包 35元\n\n訂購方式：\n先選擇您要的品名後\n待系統詢問數量時n再輸入數量即可\n（可參考附圖範例）\n到貨日期：\n如選擇店面自取\n請選擇當週的禮拜六或日\n宅配的到貨日皆為隔週二\n\n如有其他客製需求\n歡迎直接來電預訂"
         ),
+        ImageSendMessage(original_content_url="https://i.imgur.com/OIqKvRF.jpg",preview_image_url="https://i.imgur.com/OIqKvRF.jpg"),
         TemplateSendMessage(
             alt_text='訂購系統',
             template=ButtonsTemplate(
