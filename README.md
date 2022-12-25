@@ -14,7 +14,7 @@
 ### 加入好友
 輸入LINE ID：@846duagm
 或掃描以下QRCode
-![](https://qr-official.line.me/gs/M_846duagm_BW.png)
+![](https://i.imgur.com/pZ8uiWw.png)
 
 ### 主選單
 輸入「主選單」或「@回主選單」即可喚醒Line Bot開始使用
