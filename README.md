@@ -25,14 +25,21 @@
 ![](https://i.imgur.com/lZrWoCY.png)
 
 ### 關於我們
-<img src="https://i.imgur.com/RzIvSjf.jpg" width = "300" align="left">
+<p align="center"›
+ <img src="https://i.imgur.com/RzIvSjf.jpg" width="300"> 
+</p>
 
 ### 產品訂購
-<img src="https://i.imgur.com/gz2h10Q.jpg" width = "300" align="left">\
-<img src="https://i.imgur.com/Zk7fuyD.jpg" width = "300" align="left">
-
+<p align="center"›
+ <img src="https://i.imgur.com/gz2h10Q.jpg" width="300"> 
+</p>
+<p align="center"›
+ <img src="https://i.imgur.com/Zk7fuyD.jpg" width="300"> 
+</p>
 ### 訂單查詢
-<img src="https://i.imgur.com/bqEEVp3.jpg" width = "300" align="left">
+<p align="center"›
+ <img src="https://i.imgur.com/bqEEVp3.jpg" width="300"> 
+</p>
 
 ### 聯絡我們&離開商店
 <img src="https://i.imgur.com/aoFDNQn.jpg" width = "300" align="left">
