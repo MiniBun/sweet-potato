@@ -8,13 +8,13 @@
 
 ## 使用方法
 每個功能會選幾個按鈕截圖演示\
-如遇長條圖片，可能會利用電腦截圖\
-其餘皆為手機
+部分功能為了呈現完整內容\
+會以電腦版截圖展示
 
 ### 加入好友
 輸入LINE ID：@846duagm\
 或掃描QRCode\
-![](https://i.imgur.com/pZ8uiWw.png)
+ <img src="https://i.imgur.com/pZ8uiWw.png" width = "300" align="left">
 
 ### 主選單
 輸入「主選單」或「@回主選單」即可喚醒Line Bot開始使用\
@@ -25,17 +25,17 @@
 ![](https://i.imgur.com/lZrWoCY.png)
 
 ### 關於我們
-![](https://i.imgur.com/RzIvSjf.jpg)
+<img src="https://i.imgur.com/RzIvSjf.jpg" width = "300" align="left">
 
 ### 產品訂購
-![](https://i.imgur.com/gz2h10Q.jpg)\
-![](https://i.imgur.com/Zk7fuyD.jpg)
+<img src="https://i.imgur.com/gz2h10Q.jpg" width = "300" align="left">\
+<img src="https://i.imgur.com/Zk7fuyD.jpg" width = "300" align="left">
 
 ### 訂單查詢
-![](https://i.imgur.com/bqEEVp3.jpg)
+<img src="https://i.imgur.com/bqEEVp3.jpg" width = "300" align="left">
 
 ### 聯絡我們&離開商店
-![](https://i.imgur.com/aoFDNQn.jpg)
+<img src="https://i.imgur.com/aoFDNQn.jpg" width = "300" align="left">
 
 ## 其他開發
 
