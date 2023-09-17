@@ -13,8 +13,10 @@
 
 ### 加入好友
 輸入LINE ID：@846duagm\
-或掃描QRCode\
- <img src="https://i.imgur.com/pZ8uiWw.png" width = "300" align="left">
+或掃描QRCode
+<p align="left">
+	<img src="https://i.imgur.com/pZ8uiWw.png"  width="300">
+</p>
 
 ### 主選單
 輸入「主選單」或「@回主選單」即可喚醒Line Bot開始使用\
@@ -25,24 +27,28 @@
 ![](https://i.imgur.com/lZrWoCY.png)
 
 ### 關於我們
-<p align="center"›
- <img src="https://i.imgur.com/RzIvSjf.jpg" width="300"> 
+<p align="left">
+	<img src="https://i.imgur.com/RzIvSjf.jpg"  width="300">
 </p>
 
+
 ### 產品訂購
-<p align="center"›
- <img src="https://i.imgur.com/gz2h10Q.jpg" width="300"> 
+<p align="left">
+	<img src="https://i.imgur.com/gz2h10Q.jpg"  width="300">
 </p>
-<p align="center"›
- <img src="https://i.imgur.com/Zk7fuyD.jpg" width="300"> 
+<p align="left">
+	<img src="https://i.imgur.com/Zk7fuyD.jpg"  width="300">
 </p>
+
 ### 訂單查詢
-<p align="center"›
- <img src="https://i.imgur.com/bqEEVp3.jpg" width="300"> 
+<p align="left">
+	<img src="https://i.imgur.com/bqEEVp3.jpg"  width="300">
 </p>
 
 ### 聯絡我們&離開商店
-<img src="https://i.imgur.com/aoFDNQn.jpg" width = "300" align="left">
+<p align="left">
+	<img src="https://i.imgur.com/aoFDNQn.jpg"  width="300">
+</p>
 
 ## 其他開發
 
